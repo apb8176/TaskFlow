@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tieopp:taskflow:evaluation:v1",
+  "title": "TieOpp TaskFlow evaluation envelope",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "evaluationId",
+    "assessmentId",
+    "githubIssueNumber",
+    "studentGithubId",
+    "studentGithubLogin",
+    "repository",
+    "headRepository",
+    "pullRequestNumber",
+    "headCommitSha",
+    "baseAssessmentCommitSha",
+    "harnessVersion",
+    "hiddenSuiteVersion",
+    "build",
+    "baselineTests",
+    "issueTests",
+    "hiddenTests",
+    "aiReviewFindings",
+    "finalStatus",
+    "infrastructureError",
+    "reportUrl",
+    "completionConfirmedAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "evaluationId": { "type": "string", "pattern": "^[a-zA-Z0-9_-]{1,100}$" },
+    "assessmentId": {
+      "type": "string",
+      "pattern": "^TODO-00[1-9]$|^TODO-010$"
+    },
+    "githubIssueNumber": { "type": "integer", "minimum": 1 },
+    "studentGithubId": { "type": "integer", "minimum": 1 },
+    "studentGithubLogin": { "type": "string", "minLength": 1 },
+    "repository": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+    },
+    "headRepository": { "type": "string", "minLength": 3 },
+    "pullRequestNumber": { "type": "integer", "minimum": 1 },
+    "headCommitSha": { "$ref": "#/$defs/sha" },
+    "baseAssessmentCommitSha": { "$ref": "#/$defs/sha" },
+    "harnessVersion": { "type": "string", "minLength": 1 },
+    "hiddenSuiteVersion": { "type": ["string", "null"] },
+    "build": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": { "enum": ["passed", "failed", "not_run", "error"] },
+        "logRef": { "type": ["string", "null"] }
+      }
+    },
+    "baselineTests": { "$ref": "#/$defs/suite" },
+    "issueTests": { "$ref": "#/$defs/suite" },
+    "hiddenTests": { "$ref": "#/$defs/suite" },
+    "aiReviewFindings": {
+      "type": ["array", "null"],
+      "items": {
+        "type": "object",
+        "required": ["finding", "evidence", "reviewerVersion"],
+        "properties": {
+          "finding": { "type": "string" },
+          "evidence": { "type": "array", "items": { "type": "string" } },
+          "reviewerVersion": { "type": "string" },
+          "uncertainty": { "type": "string" },
+          "humanDisposition": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "finalStatus": {
+      "enum": [
+        "received",
+        "validated",
+        "queued",
+        "running",
+        "reviewing",
+        "completed",
+        "invalid_submission",
+        "infrastructure_error",
+        "superseded"
+      ]
+    },
+    "infrastructureError": { "type": ["object", "null"] },
+    "reportUrl": { "type": ["string", "null"], "format": "uri" },
+    "completionConfirmedAt": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "finalStatus": { "const": "completed" } } },
+      "then": {
+        "properties": {
+          "reportUrl": { "type": "string", "pattern": "^https://" },
+          "completionConfirmedAt": { "type": "string", "format": "date-time" },
+          "infrastructureError": { "type": "null" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "suite": {
+      "type": "object",
+      "required": ["status", "passed", "failed", "total", "cases"],
+      "properties": {
+        "status": { "enum": ["passed", "failed", "not_run", "error"] },
+        "passed": { "type": "integer", "minimum": 0 },
+        "failed": { "type": "integer", "minimum": 0 },
+        "total": { "type": "integer", "minimum": 0 },
+        "artifactRef": { "type": ["string", "null"] },
+        "cases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "status"],
+            "properties": {
+              "id": { "type": "string" },
+              "status": { "enum": ["passed", "failed", "skipped", "error"] },
+              "durationMs": { "type": "number", "minimum": 0 },
+              "diagnosticRef": { "type": ["string", "null"] }
+            }
+          }
+        }
+      }
+    }
+  }
+}

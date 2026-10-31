@@ -1,0 +1,13 @@
+# Architecture
+
+The application is a client-only Vite SPA. `main.tsx` mounts React in StrictMode. `App.tsx` composes the workspace, owns the selected status and search term, and derives the visible list. The UI uses a restrained green workspace layout, responsive CSS, Tailwind's theme and utility layer, native labeled controls, keyboard-operable editing, and accessible status/error text. No external fonts, images, APIs, accounts, or runtime services are required.
+
+`TaskProvider` owns a single `useTaskState` instance. Components consume it through `useTasks`. Task records carry a UUID, title, completion flag, priority, and ISO creation timestamp. Components do not query storage directly. State-changing actions live in the hook; storage parsing and serialization live in `taskStorage`. Malformed or unavailable storage does not prevent rendering. An explicitly empty list remains empty. A failed write produces a session-only warning.
+
+Filtering, search, and priority ordering are independent pure operations in `taskFilters`. Lists use stable React keys. `TaskItem` owns its temporary edit draft; changes are committed by the list's callbacks. Statistics read the underlying collection rather than the filtered projection. Every task capability exists on the original baseline; the ten assessment issues describe defective behavior within these capabilities.
+
+Public tests are split between ordinary baseline behavior and issue-specific regression cases. Fixtures are deliberately chosen to isolate the selected behavior. For example, status/search composition is exercised without relying on case normalization, and persistence tests cover both small collections and a populated workspace. The rapid-creation suite calls the real hook within one React batch to deterministically exercise consecutive submissions. Its four-item collection avoids unrelated restoration scenarios.
+
+Tooling runs in Node, outside the browser bundle. The issue manifest maps stable assessment IDs to GitHub issue numbers and suites. The publisher fills actual issue numbers. CI reads trusted configuration and combines the submitted `src/` with a baseline harness. This is a public feedback mechanism, not an isolation boundary against malicious JavaScript. Final evaluation belongs to TieOpp's isolated runner.
+
+There is no backend here. The evaluation contract and completion module connect to existing .NET/Python services without embedding credentials or pretending a service is deployed. Maintainer-only root-cause notes and temporary reference patches must stay outside the public repository and Git history.

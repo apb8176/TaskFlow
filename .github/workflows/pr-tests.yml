@@ -1,0 +1,117 @@
+name: Assessment feedback
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, edited]
+  workflow_call:
+    inputs:
+      pr_number:
+        type: number
+        required: true
+permissions:
+  contents: read
+  pull-requests: read
+concurrency:
+  group: assessment-${{ github.event.pull_request.number || inputs.pr_number }}-${{ github.workflow }}
+  cancel-in-progress: true
+jobs:
+  assess:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      ASSESSMENT_BASE_SHA: ${{ vars.ASSESSMENT_BASE_SHA }}
+    steps:
+      - name: Check baseline configuration
+        env:
+          BASE_SHA: ${{ vars.ASSESSMENT_BASE_SHA }}
+        run: '[[ "$BASE_SHA" =~ ^[a-f0-9]{40}$ ]] || { echo "Set ASSESSMENT_BASE_SHA to the frozen baseline commit"; exit 1; }'
+      - name: Check out trusted harness
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ vars.ASSESSMENT_BASE_SHA }}
+          path: trusted
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "22"
+      - name: Resolve PR from GitHub
+        id: pr
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea9 # v7.0.1
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
+        with:
+          script: |
+            const fs = require('fs');
+            const number = Number(process.env.PR_NUMBER);
+            if (!Number.isSafeInteger(number) || number < 1) throw new Error('Invalid PR number');
+            const {data: pr} = await github.rest.pulls.get({...context.repo, pull_number: number});
+            if (pr.state !== 'open') throw new Error('PR is not open');
+            fs.writeFileSync('trusted/pr-event.json', JSON.stringify({pull_request: pr}));
+            core.setOutput('sha', pr.head.sha);
+            core.setOutput('repository', pr.head.repo.full_name);
+      - name: Validate submission mapping
+        id: validate
+        continue-on-error: true
+        working-directory: trusted
+        env:
+          GITHUB_EVENT_PATH: pr-event.json
+        run: node scripts/validate-submission.mjs
+      - name: Check out submitted code
+        if: steps.validate.outcome == 'success'
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          repository: ${{ steps.pr.outputs.repository }}
+          ref: ${{ steps.pr.outputs.sha }}
+          path: submission
+          persist-credentials: false
+      - name: Assemble trusted tests with submitted source
+        if: steps.validate.outcome == 'success'
+        working-directory: trusted
+        run: node scripts/prepare-submission.mjs ../submission ../evaluation
+      - name: Install locked dependencies
+        id: install
+        if: steps.validate.outcome == 'success'
+        continue-on-error: true
+        working-directory: evaluation
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Build validation
+        id: build
+        if: steps.install.outcome == 'success'
+        continue-on-error: true
+        working-directory: evaluation
+        run: npm run build
+      - name: Baseline regression tests
+        id: baseline
+        if: steps.install.outcome == 'success'
+        continue-on-error: true
+        working-directory: evaluation
+        run: npm run test:baseline -- --reporter=json --outputFile=reports/baseline.json
+      - name: Selected assessment tests
+        id: issue
+        if: steps.install.outcome == 'success'
+        continue-on-error: true
+        working-directory: evaluation
+        run: |
+          ID=$(node -p "JSON.parse(require('fs').readFileSync('../trusted/reports/submission.json')).assessmentId")
+          npm run test:issue -- "$ID" --reporter=json --outputFile=reports/issue.json
+      - name: Machine-readable evaluation report and check conclusion
+        if: always()
+        env:
+          VALIDATION: ${{ steps.validate.outcome }}
+          INSTALL: ${{ steps.install.outcome }}
+          BUILD: ${{ steps.build.outcome }}
+          BASELINE: ${{ steps.baseline.outcome }}
+          ISSUE: ${{ steps.issue.outcome }}
+        run: |
+          mkdir -p evaluation
+          cd evaluation
+          node ../trusted/scripts/write-ci-report.mjs
+      - name: Upload test evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: assessment-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            trusted/reports/*.json
+            evaluation/reports/*.json
+          retention-days: 14
+          if-no-files-found: warn

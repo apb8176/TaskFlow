@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "assessment": "taskflow-react-v1",
+  "repository": "tieopp/TaskFlow",
+  "issues": [
+    {
+      "id": "TODO-001",
+      "title": "Whitespace-only task titles are accepted",
+      "difficulty": "Easy",
+      "enabled": true,
+      "githubIssueNumber": null,
+      "testFile": "tests/issues/TODO-001.test.tsx"
+    },
+    {
+      "id": "TODO-002",
+      "title": "Editing a task can update another task",
+      "difficulty": "Medium",
+      "enabled": true,
+      "githubIssueNumber": null,
+      "testFile": "tests/issues/TODO-002.test.tsx"
+    },
+    {
+      "id": "TODO-003",
+      "title": "Completed tasks appear in the Active filter",
+      "difficulty": "Easy",
+      "enabled": true,
+      "githubIssueNumber": null,
+      "testFile": "tests/issues/TODO-003.test.tsx"
+    },
+    {
+      "id": "TODO-004",
+      "title": "Task search incorrectly depends on letter case",
+      "difficulty": "Easy",
+      "enabled": true,
+      "githubIssueNumber": null,
+      "testFile": "tests/issues/TODO-004.test.tsx"
+    },
+    {
+      "id": "TODO-005",
+      "title": "New tasks disappear after refreshing a populated workspace",
+      "difficulty": "Medium",
+      "enabled": true,
+      "githubIssueNumber": null,
+      "testFile": "tests/issues/TODO-005.test.tsx"
+    },
+    {
+      "id": "TODO-006",
+      "title": "Deleting a filtered task can delete another task",
+      "difficulty": "Medium",
+      "enabled": true,
+      "githubIssueNumber": null,
+      "testFile": "tests/issues/TODO-006.test.tsx"
+    },
+    {
+      "id": "TODO-007",
+      "title": "Completed task count becomes stale",
+      "difficulty": "Easy",
+      "enabled": true,
+      "githubIssueNumber": null,
+      "testFile": "tests/issues/TODO-007.test.tsx"
+    },
+    {
+      "id": "TODO-008",
+      "title": "Priority changes do not survive refresh",
+      "difficulty": "Medium",
+      "enabled": true,
+      "githubIssueNumber": null,
+      "testFile": "tests/issues/TODO-008.test.tsx"
+    },
+    {
+      "id": "TODO-009",
+      "title": "Rapid task creation loses submissions",
+      "difficulty": "Hard",
+      "enabled": true,
+      "githubIssueNumber": null,
+      "testFile": "tests/issues/TODO-009.test.tsx"
+    },
+    {
+      "id": "TODO-010",
+      "title": "Switching task filters clears the search term",
+      "difficulty": "Medium",
+      "enabled": true,
+      "githubIssueNumber": null,
+      "testFile": "tests/issues/TODO-010.test.tsx"
+    }
+  ]
+}

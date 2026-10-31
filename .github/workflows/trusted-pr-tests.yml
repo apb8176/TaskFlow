@@ -1,0 +1,21 @@
+name: Maintainer-dispatched assessment feedback
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Open assessment PR number
+        required: true
+        type: number
+permissions:
+  contents: read
+  pull-requests: read
+jobs:
+  protected-ref:
+    runs-on: ubuntu-latest
+    steps:
+      - run: test "$GITHUB_REF" = refs/heads/main
+  feedback:
+    needs: protected-ref
+    uses: ./.github/workflows/pr-tests.yml
+    with:
+      pr_number: ${{ inputs.pr_number }}
