@@ -21,16 +21,16 @@ Browse the [assessment issues](https://github.com/tieopp/TaskFlow/issues?q=is%3A
 
 | ID | Bug | Difficulty |
 | --- | --- | --- |
-| [TODO-001](https://github.com/tieopp/TaskFlow/issues/1) | Whitespace-only titles are accepted | Easy |
-| [TODO-002](https://github.com/tieopp/TaskFlow/issues/2) | Editing can update another task | Medium |
-| [TODO-003](https://github.com/tieopp/TaskFlow/issues/3) | Completed tasks appear in Active | Easy |
-| [TODO-004](https://github.com/tieopp/TaskFlow/issues/4) | Search depends on letter case | Easy |
-| [TODO-005](https://github.com/tieopp/TaskFlow/issues/5) | Added tasks can disappear on refresh | Medium |
-| [TODO-006](https://github.com/tieopp/TaskFlow/issues/6) | Filtered deletion can remove another task | Medium |
-| [TODO-007](https://github.com/tieopp/TaskFlow/issues/7) | Completed count becomes stale | Easy |
-| [TODO-008](https://github.com/tieopp/TaskFlow/issues/8) | Priority changes disappear on refresh | Medium |
-| [TODO-009](https://github.com/tieopp/TaskFlow/issues/9) | Rapid creation loses submissions | Hard |
-| [TODO-010](https://github.com/tieopp/TaskFlow/issues/10) | Switching filters clears search | Medium |
+| [TODO-001](https://github.com/tieopp/TaskFlow/issues/11) | Whitespace-only titles are accepted | Easy |
+| [TODO-002](https://github.com/tieopp/TaskFlow/issues/12) | Editing can update another task | Medium |
+| [TODO-003](https://github.com/tieopp/TaskFlow/issues/13) | Completed tasks appear in Active | Easy |
+| [TODO-004](https://github.com/tieopp/TaskFlow/issues/14) | Search depends on letter case | Easy |
+| [TODO-005](https://github.com/tieopp/TaskFlow/issues/15) | Added tasks can disappear on refresh | Medium |
+| [TODO-006](https://github.com/tieopp/TaskFlow/issues/16) | Filtered deletion can remove another task | Medium |
+| [TODO-007](https://github.com/tieopp/TaskFlow/issues/17) | Completed count becomes stale | Easy |
+| [TODO-008](https://github.com/tieopp/TaskFlow/issues/18) | Priority changes disappear on refresh | Medium |
+| [TODO-009](https://github.com/tieopp/TaskFlow/issues/19) | Rapid creation loses submissions | Hard |
+| [TODO-010](https://github.com/tieopp/TaskFlow/issues/20) | Switching filters clears search | Medium |
 
 ## Submit a fix
 

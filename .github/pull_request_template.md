@@ -1,7 +1,7 @@
 ## TieOpp Codebase Comprehension Assessment
 
 Assessment ID: TODO-003
-Related GitHub Issue: #3
+Related GitHub Issue: #13
 
 <!-- Replace BOTH examples with your selected assessment ID and its actual issue number.
 Title format: [ASSESSMENT-ID] Concise fix description
