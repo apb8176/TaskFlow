@@ -17,20 +17,20 @@ Open the local Vite URL. The initial workspace includes realistic sample tasks. 
 
 ## Choose one issue
 
-Browse the [assessment issues](https://github.com/tieopp/TaskFlow/issues?q=is%3Aissue+is%3Aopen+TODO-) or the definitions in [assessment/issues](assessment/issues). Publishing by a maintainer is required before the issues appear on GitHub. Multiple students can independently solve the same issue; it stays open after evaluation.
+Browse the [assessment issues](https://github.com/tieopp/TaskFlow/issues?q=is%3Aissue+is%3Aopen+TODO-) or the definitions in [assessment/issues](assessment/issues). All ten assessment issues are published on GitHub; the links below open their live issue pages. Multiple students can independently solve the same issue; it stays open after evaluation.
 
 | ID | Bug | Difficulty |
 | --- | --- | --- |
-| TODO-001 | Whitespace-only titles are accepted | Easy |
-| TODO-002 | Editing can update another task | Medium |
-| TODO-003 | Completed tasks appear in Active | Easy |
-| TODO-004 | Search depends on letter case | Easy |
-| TODO-005 | Added tasks can disappear on refresh | Medium |
-| TODO-006 | Filtered deletion can remove another task | Medium |
-| TODO-007 | Completed count becomes stale | Easy |
-| TODO-008 | Priority changes disappear on refresh | Medium |
-| TODO-009 | Rapid creation loses submissions | Hard |
-| TODO-010 | Switching filters clears search | Medium |
+| [TODO-001](https://github.com/tieopp/TaskFlow/issues/1) | Whitespace-only titles are accepted | Easy |
+| [TODO-002](https://github.com/tieopp/TaskFlow/issues/2) | Editing can update another task | Medium |
+| [TODO-003](https://github.com/tieopp/TaskFlow/issues/3) | Completed tasks appear in Active | Easy |
+| [TODO-004](https://github.com/tieopp/TaskFlow/issues/4) | Search depends on letter case | Easy |
+| [TODO-005](https://github.com/tieopp/TaskFlow/issues/5) | Added tasks can disappear on refresh | Medium |
+| [TODO-006](https://github.com/tieopp/TaskFlow/issues/6) | Filtered deletion can remove another task | Medium |
+| [TODO-007](https://github.com/tieopp/TaskFlow/issues/7) | Completed count becomes stale | Easy |
+| [TODO-008](https://github.com/tieopp/TaskFlow/issues/8) | Priority changes disappear on refresh | Medium |
+| [TODO-009](https://github.com/tieopp/TaskFlow/issues/9) | Rapid creation loses submissions | Hard |
+| [TODO-010](https://github.com/tieopp/TaskFlow/issues/10) | Switching filters clears search | Medium |
 
 ## Submit a fix
 
