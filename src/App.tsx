@@ -14,7 +14,6 @@ export function Workspace() {
   const [query, setQuery] = useState("");
   function changeFilter(next: TaskFilter) {
     setFilter(next);
-    setQuery("");
   }
   const visible = orderTasks(searchTasks(filterTasks(tasks, filter), query));
   return (

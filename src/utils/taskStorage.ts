@@ -22,7 +22,7 @@ export function loadTasks(): Task[] {
         parsed.every(isTask) &&
         new Set(parsed.map((t) => t.id)).size === parsed.length
       )
-        return parsed.slice(0, 5);
+        return parsed;
     }
   } catch {
     /* An unavailable store must not prevent local use. */
