@@ -13,6 +13,7 @@
     "lint": "eslint .",
     "test:baseline": "vitest run tests/baseline",
     "test:issue": "node scripts/run-issue-tests.mjs",
+    "test:issues": "vitest run tests/issues",
     "test:all": "vitest run",
     "test:tooling": "node --test tests/tooling/*.test.mjs",
     "verify:assessment": "node scripts/verify-assessment.mjs",

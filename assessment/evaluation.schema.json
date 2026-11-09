@@ -32,9 +32,24 @@
     "evaluationId": { "type": "string", "pattern": "^[a-zA-Z0-9_-]{1,100}$" },
     "assessmentId": {
       "type": "string",
-      "pattern": "^TODO-00[1-9]$|^TODO-010$"
+      "pattern": "^(?:TODO-00[1-9]|TODO-010|TODO-ALL)$"
     },
-    "githubIssueNumber": { "type": "integer", "minimum": 1 },
+    "assessmentIds": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^TODO-00[1-9]$|^TODO-010$" }
+    },
+    "githubIssueNumber": {
+      "type": ["integer", "null"],
+      "minimum": 1
+    },
+    "githubIssueNumbers": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "integer", "minimum": 1 }
+    },
     "studentGithubId": { "type": "integer", "minimum": 1 },
     "studentGithubLogin": { "type": "string", "minLength": 1 },
     "repository": {

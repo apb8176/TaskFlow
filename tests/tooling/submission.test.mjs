@@ -21,6 +21,43 @@ test("uses the published issue number, not the numeric assessment suffix", () =>
   assert.equal(result.githubIssueNumber, 42);
   assert.equal(result.assessmentId, "TODO-003");
 });
+test("accepts one TODO-ALL submission containing every enabled issue", () => {
+  const input = event();
+  input.pull_request.title = "[TODO-ALL] Fix all ten task management issues";
+  input.pull_request.body = `Assessment IDs: ${config.issues.map((issue) => issue.id).join(", ")}
+Related GitHub Issues: ${config.issues.map((issue) => `#${issue.githubIssueNumber}`).join(", ")}
+
+## Bug Fixed
+All ten published task-management defects.
+
+## Root Cause
+The defects came from independent state, filtering, persistence, and identity errors.
+
+## Changes Made
+Implemented focused fixes for every published requirement.
+
+## Testing
+Ran the baseline and all ten assessment suites.`;
+  const result = validateSubmission(input, config);
+  assert.equal(result.assessmentId, "TODO-ALL");
+  assert.deepEqual(
+    result.assessmentIds,
+    config.issues.map((issue) => issue.id),
+  );
+  assert.equal(result.githubIssueNumber, null);
+  assert.deepEqual(
+    result.githubIssueNumbers,
+    config.issues.map((issue) => issue.githubIssueNumber),
+  );
+});
+test("rejects an incomplete TODO-ALL mapping", () => {
+  const input = event();
+  input.pull_request.title = "[TODO-ALL] Fix all ten task management issues";
+  input.pull_request.body = input.pull_request.body
+    .replace("Assessment ID: TODO-003", "Assessment IDs: TODO-001, TODO-002")
+    .replace("Related GitHub Issue: #42", "Related GitHub Issues: #11, #12");
+  assert.throws(() => validateSubmission(input, config), /every enabled/);
+});
 for (const [name, change] of [
   [
     "unknown ID",

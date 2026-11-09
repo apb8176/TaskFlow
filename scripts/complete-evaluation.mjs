@@ -31,12 +31,26 @@ export async function completeEvaluation(
     !/^[a-f0-9]{40}$/.test(record.baseAssessmentCommitSha)
   )
     throw new Error("Invalid commit identity");
-  const issue = manifest.issues.find(
+  const enabledIssues = manifest.issues.filter((issue) => issue.enabled);
+  const validBundle =
+    record.assessmentId === "TODO-ALL" &&
+    record.githubIssueNumber === null &&
+    Array.isArray(record.assessmentIds) &&
+    Array.isArray(record.githubIssueNumbers) &&
+    record.assessmentIds.length === enabledIssues.length &&
+    record.githubIssueNumbers.length === enabledIssues.length &&
+    enabledIssues.every(
+      (issue) =>
+        record.assessmentIds.includes(issue.id) &&
+        record.githubIssueNumbers.includes(issue.githubIssueNumber),
+    );
+  const validSingle = manifest.issues.some(
     (issue) =>
       issue.id === record.assessmentId &&
       issue.githubIssueNumber === record.githubIssueNumber,
   );
-  if (!issue) throw new Error("Invalid assessment mapping");
+  if (!validSingle && !validBundle)
+    throw new Error("Invalid assessment mapping");
   const url = new URL(record.reportUrl);
   if (
     url.protocol !== "https:" ||

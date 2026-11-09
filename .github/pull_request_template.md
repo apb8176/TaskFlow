@@ -1,10 +1,11 @@
 ## TieOpp Codebase Comprehension Assessment
 
-Assessment ID: TODO-003
-Related GitHub Issue: #13
+Assessment IDs: TODO-001, TODO-002, TODO-003, TODO-004, TODO-005, TODO-006, TODO-007, TODO-008, TODO-009, TODO-010
+Related GitHub Issues: #11, #12, #13, #14, #15, #16, #17, #18, #19, #20
 
-<!-- Replace BOTH examples with your selected assessment ID and its actual issue number.
-Title format: [ASSESSMENT-ID] Concise fix description
+<!-- For one PR containing all ten fixes, keep both lines above.
+Title format: [TODO-ALL] Concise fix description
+Single-TODO PRs remain supported using the singular Assessment ID and Related GitHub Issue fields.
 Use Related GitHub Issue, never Fixes/Closes/Resolves #N. -->
 
 ## Bug Fixed
