@@ -64,6 +64,23 @@ test("comments and closes only the PR, never the assessment issue", async () => 
     ),
   );
 });
+test("accepts a completed TODO-ALL evaluation covering every enabled issue", async () => {
+  const f = fixture();
+  f.options.manifest.issues = Array.from({ length: 10 }, (_, index) => ({
+    id: `TODO-${String(index + 1).padStart(3, "0")}`,
+    githubIssueNumber: index + 11,
+    enabled: true,
+  }));
+  f.record.assessmentId = "TODO-ALL";
+  f.record.assessmentIds = f.options.manifest.issues.map((issue) => issue.id);
+  f.record.githubIssueNumber = null;
+  f.record.githubIssueNumbers = f.options.manifest.issues.map(
+    (issue) => issue.githubIssueNumber,
+  );
+  assert.deepEqual(await completeEvaluation(f.record, f.options), {
+    status: "closed_without_merging",
+  });
+});
 test("retries after success do not duplicate comments", async () => {
   const f = fixture();
   await completeEvaluation(f.record, f.options);

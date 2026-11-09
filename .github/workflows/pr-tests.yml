@@ -18,18 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     env:
-      ASSESSMENT_BASE_SHA: ${{ vars.ASSESSMENT_BASE_SHA }}
+      ASSESSMENT_BASE_SHA: ${{ vars.ASSESSMENT_BASE_SHA || '2b47743e19abe40f053c1492a2aa6fad22665f68' }}
     steps:
       - name: Check baseline configuration
-        env:
-          BASE_SHA: ${{ vars.ASSESSMENT_BASE_SHA }}
-        run: '[[ "$BASE_SHA" =~ ^[a-f0-9]{40}$ ]] || { echo "Set ASSESSMENT_BASE_SHA to the frozen baseline commit"; exit 1; }'
-      - name: Check out trusted harness
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-        with:
-          ref: ${{ vars.ASSESSMENT_BASE_SHA }}
-          path: trusted
-          persist-credentials: false
+        run: '[[ "$ASSESSMENT_BASE_SHA" =~ ^[a-f0-9]{40}$ ]] || { echo "ASSESSMENT_BASE_SHA must be a 40-character commit SHA"; exit 1; }'
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: "22"
@@ -45,9 +37,21 @@ jobs:
             if (!Number.isSafeInteger(number) || number < 1) throw new Error('Invalid PR number');
             const {data: pr} = await github.rest.pulls.get({...context.repo, pull_number: number});
             if (pr.state !== 'open') throw new Error('PR is not open');
-            fs.writeFileSync('trusted/pr-event.json', JSON.stringify({pull_request: pr}));
+            fs.writeFileSync(`${process.env.RUNNER_TEMP}/pr-event.json`, JSON.stringify({pull_request: pr}));
             core.setOutput('sha', pr.head.sha);
+            core.setOutput('base_sha', pr.base.sha);
             core.setOutput('repository', pr.head.repo.full_name);
+      - name: Check out trusted harness
+        id: trusted-checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ steps.pr.outputs.base_sha }}
+          path: trusted
+          persist-credentials: false
+      - name: Save resolved PR event
+        run: |
+          test -d trusted
+          cp "$RUNNER_TEMP/pr-event.json" trusted/pr-event.json
       - name: Validate submission mapping
         id: validate
         continue-on-error: true
@@ -92,9 +96,13 @@ jobs:
         working-directory: evaluation
         run: |
           ID=$(node -p "JSON.parse(require('fs').readFileSync('../trusted/reports/submission.json')).assessmentId")
-          npm run test:issue -- "$ID" --reporter=json --outputFile=reports/issue.json
+          if [ "$ID" = "TODO-ALL" ]; then
+            npm run test:issues -- --reporter=json --outputFile=reports/issue.json
+          else
+            npm run test:issue -- "$ID" --reporter=json --outputFile=reports/issue.json
+          fi
       - name: Machine-readable evaluation report and check conclusion
-        if: always()
+        if: always() && steps.trusted-checkout.outcome == 'success'
         env:
           VALIDATION: ${{ steps.validate.outcome }}
           INSTALL: ${{ steps.install.outcome }}
