@@ -1,12 +1,8 @@
-import { useMemo } from "react";
 import { useTasks } from "../hooks/useTasks";
 export function TaskStats() {
   const { tasks } = useTasks();
-  const completed = useMemo(
-    () => tasks.filter((task) => task.completed).length,
-    [tasks.length],
-  );
-  const active = tasks.filter((task) => !task.completed).length;
+  const completed = tasks.filter((task) => task.completed).length;
+  const active = tasks.length - completed;
   return (
     <section aria-label="Task statistics" className="stats-grid">
       <article>

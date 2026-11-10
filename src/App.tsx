@@ -12,10 +12,6 @@ export function Workspace() {
   const { tasks, storageError } = useTasks();
   const [filter, setFilter] = useState<TaskFilter>("all");
   const [query, setQuery] = useState("");
-  function changeFilter(next: TaskFilter) {
-    setFilter(next);
-    setQuery("");
-  }
   const visible = orderTasks(searchTasks(filterTasks(tasks, filter), query));
   return (
     <div className="app-shell">
@@ -91,7 +87,7 @@ export function Workspace() {
               </p>
             )}
             <div className="task-toolbar">
-              <TaskFilters value={filter} onChange={changeFilter} />
+              <TaskFilters value={filter} onChange={setFilter} />
               <TaskSearch value={query} onChange={setQuery} />
             </div>
             <TaskList visibleTasks={visible} />

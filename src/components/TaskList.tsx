@@ -2,7 +2,7 @@ import type { Task } from "../types/task";
 import { useTasks } from "../hooks/useTasks";
 import { TaskItem } from "./TaskItem";
 export function TaskList({ visibleTasks }: { visibleTasks: Task[] }) {
-  const { tasks, editTask, deleteTask } = useTasks();
+  const { editTask, deleteTask } = useTasks();
   if (!visibleTasks.length)
     return (
       <div className="empty-state">
@@ -13,12 +13,12 @@ export function TaskList({ visibleTasks }: { visibleTasks: Task[] }) {
     );
   return (
     <ul className="task-list" aria-label="Tasks">
-      {visibleTasks.map((task, index) => (
+      {visibleTasks.map((task) => (
         <TaskItem
           key={task.id}
           task={task}
-          onEdit={(title) => editTask(tasks[index].id, title)}
-          onDelete={() => deleteTask(tasks[index].id)}
+          onEdit={(title) => editTask(task.id, title)}
+          onDelete={() => deleteTask(task.id)}
         />
       ))}
     </ul>
