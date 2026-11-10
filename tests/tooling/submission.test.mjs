@@ -8,7 +8,7 @@ function event() {
   return {
     pull_request: {
       number: 17,
-      title: "[TODO-003] Correct active filtering",
+      title: "Correct active filtering",
       body: "Assessment ID: TODO-003\nRelated GitHub Issue: #42\n\n## Bug Fixed\nCompleted tasks appeared.\n\n## Root Cause\nThe status predicate was incorrect.\n\n## Changes Made\nAdjusted the behavior.\n\n## Testing\nRan the selected suite.",
       base: { ref: "main", repo: { full_name: "tieopp/TaskFlow" } },
       head: { sha: "a".repeat(40), repo: { full_name: "student/TaskFlow" } },
@@ -23,7 +23,7 @@ test("uses the published issue number, not the numeric assessment suffix", () =>
 });
 test("accepts one TODO-ALL submission containing every enabled issue", () => {
   const input = event();
-  input.pull_request.title = "[TODO-ALL] Fix all ten task management issues";
+  input.pull_request.title = "Fix all ten task management issues";
   input.pull_request.body = `Assessment IDs: ${config.issues.map((issue) => issue.id).join(", ")}
 Related GitHub Issues: ${config.issues.map((issue) => `#${issue.githubIssueNumber}`).join(", ")}
 
@@ -52,7 +52,7 @@ Ran the baseline and all ten assessment suites.`;
 });
 test("rejects an incomplete TODO-ALL mapping", () => {
   const input = event();
-  input.pull_request.title = "[TODO-ALL] Fix all ten task management issues";
+  input.pull_request.title = "Resolve every published defect";
   input.pull_request.body = input.pull_request.body
     .replace("Assessment ID: TODO-003", "Assessment IDs: TODO-001, TODO-002")
     .replace("Related GitHub Issue: #42", "Related GitHub Issues: #11, #12");
@@ -62,13 +62,16 @@ for (const [name, change] of [
   [
     "unknown ID",
     (e) => {
-      e.pull_request.title = "[TODO-099] Unknown";
+      e.pull_request.body = e.pull_request.body.replace(
+        "Assessment ID: TODO-003",
+        "Assessment ID: TODO-099",
+      );
     },
   ],
   [
-    "multiple IDs",
+    "mixed single and bundle mappings",
     (e) => {
-      e.pull_request.body += "\nTODO-004";
+      e.pull_request.body += "\nAssessment IDs: TODO-003, TODO-004";
     },
   ],
   [
@@ -110,18 +113,28 @@ for (const [name, change] of [
       e.pull_request.body += "\nAssessment ID: TODO-003";
     },
   ],
-  [
-    "shell-like title",
-    (e) => {
-      e.pull_request.title = "$(echo TODO-003)";
-    },
-  ],
 ])
   test(`rejects ${name}`, () => {
     const input = event();
     change(input);
     assert.throws(() => validateSubmission(input, config));
   });
+for (const title of [
+  "fixes",
+  "Resolve all TaskFlow bugs",
+  "$(echo TODO-003)",
+  "Production hotfix #42",
+])
+  test(`accepts arbitrary title: ${title}`, () => {
+    const input = event();
+    input.pull_request.title = title;
+    assert.equal(validateSubmission(input, config).assessmentId, "TODO-003");
+  });
+test("rejects an empty title", () => {
+  const input = event();
+  input.pull_request.title = "   ";
+  assert.throws(() => validateSubmission(input, config), /must not be empty/);
+});
 test("rejects unpublished and disabled mappings", () => {
   assert.throws(() => validateSubmission(event(), manifest));
   const disabled = structuredClone(config);
