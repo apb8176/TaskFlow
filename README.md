@@ -23,7 +23,7 @@ TaskFlow is TieOpp's Codebase Comprehension & Engineering Judgment Assessment fo
 - [Administrator guide](docs/admin-guide.md) — assessment maintenance and repository controls
 - [GitHub integration](docs/github-integration.md) — trusted automation and evaluation lifecycle
 - [Contributing](CONTRIBUTING.md) — contribution and pull-request requirements
-- [Security](SECURITY.md) and [support](SUPPORT.md) — private reporting and help channels
+- [Security](.github/SECURITY.md), [code of conduct](CODE_OF_CONDUCT.md), and [support](SUPPORT.md) — reporting and community guidance
 
 ## Run locally
 
@@ -121,4 +121,4 @@ Built with React 19, TypeScript, Vite, Tailwind CSS, Context and hooks, Vitest, 
 
 ## Contributing, security, and support
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md) before proposing changes. Assessment submissions and repository-maintenance changes follow different review paths. Report security vulnerabilities privately according to [SECURITY.md](SECURITY.md); do not disclose them in a public issue. For setup and assessment help, see [SUPPORT.md](SUPPORT.md).
+Read [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md) before proposing changes. Assessment submissions and repository-maintenance changes follow different review paths. Report security vulnerabilities privately according to [.github/SECURITY.md](.github/SECURITY.md); do not disclose them in a public issue. For setup and assessment help, see [SUPPORT.md](SUPPORT.md).

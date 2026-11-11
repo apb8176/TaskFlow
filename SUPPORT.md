@@ -15,4 +15,4 @@ For enrollment, identity, scoring, or report-access questions, use the authentic
 
 ## GitHub issues
 
-Use the existing `TODO-NNN` issues for assessment requirements. Duplicate challenge issues are intentionally disabled. Security reports belong in the private channel described in [SECURITY.md](SECURITY.md).
+Use the existing `TODO-NNN` issues for assessment requirements. Duplicate challenge issues are intentionally disabled. Security reports belong in the private channel described in [.github/SECURITY.md](.github/SECURITY.md).
