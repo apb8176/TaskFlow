@@ -61,7 +61,7 @@ Browse the [assessment issues](https://github.com/tieopp/TaskFlow/issues?q=is%3A
 4. Reproduce the bug, navigate the code, and make a focused change in `src/`.
 5. Run the baseline suite, your selected issue suite, build, and lint.
 6. Push your branch to your fork and open a PR against `tieopp/TaskFlow:main`.
-7. Use any clear, non-empty PR title. Complete every PR template section, including the structured `Assessment ID`/`Assessment IDs` field, root cause, changes, and testing evidence.
+7. Use any clear, non-empty PR title. Keep the structured `Assessment ID`/`Assessment IDs` and related GitHub issue fields in the PR body. The narrative description sections are optional.
 8. Copy the **actual GitHub issue number** from the selected issue. `TODO-003` does not necessarily mean issue `#3`. Do not use `Fixes #N`, `Closes #N`, or `Resolves #N`.
 
 ```sh

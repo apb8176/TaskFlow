@@ -93,15 +93,6 @@ for (const [name, change] of [
     },
   ],
   [
-    "missing explanation",
-    (e) => {
-      e.pull_request.body = e.pull_request.body.replace(
-        "Adjusted the behavior.",
-        "",
-      );
-    },
-  ],
-  [
     "invalid SHA",
     (e) => {
       e.pull_request.head.sha = "main";
@@ -134,6 +125,21 @@ test("rejects an empty title", () => {
   const input = event();
   input.pull_request.title = "   ";
   assert.throws(() => validateSubmission(input, config), /must not be empty/);
+});
+test("accepts omitted narrative description sections", () => {
+  const input = event();
+  input.pull_request.body =
+    "Assessment ID: TODO-003\nRelated GitHub Issue: #42";
+  assert.equal(validateSubmission(input, config).assessmentId, "TODO-003");
+});
+test("accepts unmodified optional narrative placeholders", () => {
+  const input = event();
+  input.pull_request.body = input.pull_request.body
+    .replace("Completed tasks appeared.", "Describe the observed bug.")
+    .replace("The status predicate was incorrect.", "Explain why the bug occurred.")
+    .replace("Adjusted the behavior.", "Describe the implementation changes.")
+    .replace("Ran the selected suite.", "Explain how the fix was verified.");
+  assert.equal(validateSubmission(input, config).assessmentId, "TODO-003");
 });
 test("rejects unpublished and disabled mappings", () => {
   assert.throws(() => validateSubmission(event(), manifest));

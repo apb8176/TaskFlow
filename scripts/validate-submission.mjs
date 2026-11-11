@@ -67,19 +67,6 @@ export function validateSubmission(event, config = manifest) {
     )
   )
     throw new Error("Use Related GitHub Issue, not auto-closing keywords");
-  for (const heading of [
-    "Bug Fixed",
-    "Root Cause",
-    "Changes Made",
-    "Testing",
-  ]) {
-    const match = new RegExp(
-      `^## ${heading}\\s*\\n([\\s\\S]*?)(?=^## |$(?![\\s\\S]))`,
-      "m",
-    ).exec(body);
-    if (!match?.[1].trim() || /^Describe |^Explain /.test(match[1].trim()))
-      throw new Error(`Complete the ${heading} section`);
-  }
   if (!/^[a-f0-9]{40}$/.test(pr.head?.sha ?? ""))
     throw new Error("Invalid head commit SHA");
   if (
