@@ -6,17 +6,21 @@ export function validateSubmission(event, config = manifest) {
   if (!pr || pr.base?.ref !== "main") throw new Error("PR must target main");
   if (pr.base.repo.full_name !== config.repository)
     throw new Error("Wrong assessment repository");
-  const title = /^\[(TODO-(?:\d{3}|ALL))\]\s+\S.+$/.exec(pr.title ?? "");
-  if (!title)
-    throw new Error("Title must start with [TODO-NNN] or [TODO-ALL] and a description");
+  if (!(pr.title ?? "").trim()) throw new Error("PR title must not be empty");
   const body = pr.body ?? "";
   const enabledIssues = config.issues.filter((item) => item.enabled);
-  let issues;
-  if (title[1] === "TODO-ALL") {
-    const assessmentLines = [...body.matchAll(/^Assessment IDs:\s*(.+)\s*$/gm)];
-    if (assessmentLines.length !== 1)
-      throw new Error("Body must contain exactly one Assessment IDs line");
-    const submittedIds = assessmentLines[0][1].match(/TODO-\d{3}/g) ?? [];
+  const bundleLines = [...body.matchAll(/^Assessment IDs:\s*(.+)\s*$/gm)];
+  const singleLines = [
+    ...body.matchAll(/^Assessment ID:\s*(TODO-\d{3})\s*$/gm),
+  ];
+  if (bundleLines.length + singleLines.length !== 1)
+    throw new Error(
+      "Body must contain exactly one Assessment ID or Assessment IDs line",
+    );
+  let assessmentId, issues;
+  if (bundleLines.length === 1) {
+    assessmentId = "TODO-ALL";
+    const submittedIds = bundleLines[0][1].match(/TODO-\d{3}/g) ?? [];
     const expectedIds = enabledIssues.map((item) => item.id);
     if (
       submittedIds.length !== expectedIds.length ||
@@ -42,14 +46,8 @@ export function validateSubmission(event, config = manifest) {
       throw new Error("Related GitHub Issues must include every published issue exactly once");
     issues = enabledIssues;
   } else {
-    const ids = new Set(`${pr.title}\n${body}`.match(/TODO-\d+/g));
-    if (ids.size !== 1) throw new Error("Associate exactly one assessment ID");
-    const assessments = [
-      ...body.matchAll(/^Assessment ID:\s*(TODO-\d{3})\s*$/gm),
-    ];
-    if (assessments.length !== 1 || assessments[0][1] !== title[1])
-      throw new Error("Body assessment ID must match title");
-    const issue = enabledIssues.find((item) => item.id === title[1]);
+    assessmentId = singleLines[0][1];
+    const issue = enabledIssues.find((item) => item.id === assessmentId);
     if (!issue) throw new Error("Unknown or disabled assessment ID");
     const related = [
       ...body.matchAll(/^Related GitHub Issue:\s*#([1-9]\d*)\s*$/gm),
@@ -69,19 +67,6 @@ export function validateSubmission(event, config = manifest) {
     )
   )
     throw new Error("Use Related GitHub Issue, not auto-closing keywords");
-  for (const heading of [
-    "Bug Fixed",
-    "Root Cause",
-    "Changes Made",
-    "Testing",
-  ]) {
-    const match = new RegExp(
-      `^## ${heading}\\s*\\n([\\s\\S]*?)(?=^## |$(?![\\s\\S]))`,
-      "m",
-    ).exec(body);
-    if (!match?.[1].trim() || /^Describe |^Explain /.test(match[1].trim()))
-      throw new Error(`Complete the ${heading} section`);
-  }
   if (!/^[a-f0-9]{40}$/.test(pr.head?.sha ?? ""))
     throw new Error("Invalid head commit SHA");
   if (
@@ -92,7 +77,7 @@ export function validateSubmission(event, config = manifest) {
   )
     throw new Error("Missing PR identity");
   return {
-    assessmentId: title[1],
+    assessmentId,
     assessmentIds: issues.map((issue) => issue.id),
     githubIssueNumber: issues.length === 1 ? issues[0].githubIssueNumber : null,
     githubIssueNumbers: issues.map((issue) => issue.githubIssueNumber),

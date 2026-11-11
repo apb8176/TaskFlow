@@ -3,3 +3,9 @@ contact_links:
   - name: Choose an existing assessment
     url: https://github.com/tieopp/TaskFlow/issues
     about: Select one of the ten TODO issues. Do not create a duplicate challenge.
+  - name: Read the student support guide
+    url: https://github.com/tieopp/TaskFlow/blob/main/SUPPORT.md
+    about: Find setup, pipeline, assessment, and maintainer support guidance.
+  - name: Report a security vulnerability privately
+    url: https://github.com/tieopp/TaskFlow/security/advisories/new
+    about: Do not disclose security vulnerabilities in a public issue.

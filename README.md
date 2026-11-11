@@ -2,7 +2,28 @@
 
 **A focused task workspace. A real codebase to investigate.**
 
-TaskFlow is TieOpp's first Codebase Comprehension & Engineering Judgment Assessment. It is a functional React application with **10 deliberately introduced bugs**, all present together on `main`. Choose one existing issue, investigate its behavior, and submit a focused fix from your fork. This is a bug-fixing assessment, not a feature-building exercise.
+TaskFlow is TieOpp's Codebase Comprehension & Engineering Judgment Assessment for React engineers. It is a functional task-management application with **10 deliberately introduced bugs**, all present together on the pinned assessment baseline. Candidates investigate real application behavior, trace the existing architecture, implement focused corrections, and verify them through an isolated test harness.
+
+> [!IMPORTANT]
+> This repository intentionally contains known functional defects. It is an assessment environment, not a production task manager. Do not store important data in it.
+
+## Highlights
+
+- React 19 and TypeScript application built with Vite and Tailwind CSS
+- Ten independently specified debugging requirements with public acceptance tests
+- Single-requirement and all-requirements (`TODO-ALL`) submission modes
+- Pinned assessment baseline and trusted GitHub Actions validation
+- Baseline, issue, tooling, build, and lint checks
+- Machine-readable evaluation evidence for TieOpp integrations
+
+## Documentation
+
+- [Student guide](docs/student-guide.md) — setup, baseline selection, submission, and troubleshooting
+- [Architecture](docs/architecture.md) — application structure and data flow
+- [Administrator guide](docs/admin-guide.md) — assessment maintenance and repository controls
+- [GitHub integration](docs/github-integration.md) — trusted automation and evaluation lifecycle
+- [Contributing](CONTRIBUTING.md) — contribution and pull-request requirements
+- [Security](.github/SECURITY.md), [code of conduct](CODE_OF_CONDUCT.md), and [support](SUPPORT.md) — reporting and community guidance
 
 ## Run locally
 
@@ -15,9 +36,9 @@ npm run dev
 
 Open the local Vite URL. The initial workspace includes realistic sample tasks. Add, edit, delete, complete, search, filter, and prioritize tasks. Data stays in this browser's localStorage; there is no account or backend. Do not use this deliberately defective application to store important work. Clear the `tieopp.taskflow.v1` storage key to restore samples.
 
-## Choose one issue
+## Choose an assessment scope
 
-Browse the [assessment issues](https://github.com/tieopp/TaskFlow/issues?q=is%3Aissue+is%3Aopen+TODO-) or the definitions in [assessment/issues](assessment/issues). All ten assessment issues are published on GitHub; the links below open their live issue pages. Multiple students can independently solve the same issue; it stays open after evaluation.
+Browse the [assessment issues](https://github.com/tieopp/TaskFlow/issues?q=is%3Aissue+is%3Aopen+TODO-) or the definitions in [assessment/issues](assessment/issues). A submission may address one selected requirement or all ten requirements when the assigned TieOpp challenge uses `TODO-ALL`. Multiple students can independently solve the same issue; assessment issues remain open after evaluation.
 
 | ID | Bug | Difficulty |
 | --- | --- | --- |
@@ -40,7 +61,7 @@ Browse the [assessment issues](https://github.com/tieopp/TaskFlow/issues?q=is%3A
 4. Reproduce the bug, navigate the code, and make a focused change in `src/`.
 5. Run the baseline suite, your selected issue suite, build, and lint.
 6. Push your branch to your fork and open a PR against `tieopp/TaskFlow:main`.
-7. Title it `[TODO-003] Fix Active Filter Behavior`, replacing the ID as appropriate. Complete every PR template section, including the explanation of the root cause and testing.
+7. Use any clear, non-empty PR title. Keep the structured `Assessment ID`/`Assessment IDs` and related GitHub issue fields in the PR body. The narrative description sections are optional.
 8. Copy the **actual GitHub issue number** from the selected issue. `TODO-003` does not necessarily mean issue `#3`. Do not use `Fixes #N`, `Closes #N`, or `Resolves #N`.
 
 ```sh
@@ -65,17 +86,18 @@ See the [student guide](docs/student-guide.md) for baseline selection and troubl
 | --- | --- |
 | `npm run test:baseline` | 15 existing-behavior checks; must pass |
 | `npm run test:issue -- TODO-003` | Only that issue's public regression tests |
+| `npm run test:issues` | All ten public issue suites for a `TODO-ALL` submission |
 | `npm run test:all` | All 56 app tests; intentionally fails on the original baseline |
 | `npm run test:tooling` | Submission, completion-operation, and workflow checks |
 | `npm run verify:assessment` | Maintainer check: baseline green, all ten issue suites red |
 | `npm run build` | TypeScript validation and production build |
 | `npm run lint` | ESLint code-quality checks |
 
-Only your selected issue must pass; unrelated bugs remain. Tests assert correct behavior using ordinary assertions, not expected-failure markers. Public tests and configs changed in a fork are not authoritative grading inputs. Dependency changes are outside the scope of these ten issues.
+For a single-requirement submission, only the selected issue must pass and unrelated bugs remain. A `TODO-ALL` submission must pass every issue suite. Tests assert correct behavior using ordinary assertions, not expected-failure markers. Public tests and configs changed in a fork are not authoritative grading inputs. Dependency changes are outside the scope of these ten issues.
 
 ## Evaluation
 
-GitHub Actions validates your PR metadata, builds submitted application code with the pinned harness, runs baseline tests and only the selected issue suite, and uploads JSON evidence. Fork runs may require maintainer approval. The whole diagnostic suite is **not** used to grade your selected issue.
+GitHub Actions validates structured PR metadata, builds submitted application code with the pinned harness, runs baseline tests and the applicable issue suite or suites, and uploads JSON evidence. Fork runs may require maintainer approval.
 
 TieOpp's evaluation service will separately run trusted public and private tests in isolation and review your explanation and implementation with AI assistance. The service must be connected by the repository administrator; no scores or backend integrations are simulated here. Final reports belong on your authenticated TieOpp dashboard.
 
@@ -96,3 +118,7 @@ docs/               Student, architecture, admin and integration guides
 ```
 
 Built with React 19, TypeScript, Vite, Tailwind CSS, Context and hooks, Vitest, React Testing Library, and ESLint. See [architecture](docs/architecture.md), [admin setup](docs/admin-guide.md), and [GitHub integration](docs/github-integration.md). Public PRs expose submitted solutions; higher-stakes assessments should use private per-student repositories.
+
+## Contributing, security, and support
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md) before proposing changes. Assessment submissions and repository-maintenance changes follow different review paths. Report security vulnerabilities privately according to [.github/SECURITY.md](.github/SECURITY.md); do not disclose them in a public issue. For setup and assessment help, see [SUPPORT.md](SUPPORT.md).
