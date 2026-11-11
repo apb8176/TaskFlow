@@ -8,7 +8,7 @@ export function useTaskState() {
   const persist = (next: Task[]) => setStorageError(!saveTasks(next));
 
   function addTask(title: string, priority: Priority): boolean {
-    if (title.length === 0) return false;
+    if (title.trim().length === 0) return false;
     const task: Task = {
       id: crypto.randomUUID(),
       title: title.trim(),

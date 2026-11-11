@@ -21,8 +21,10 @@ export function loadTasks(): Task[] {
         Array.isArray(parsed) &&
         parsed.every(isTask) &&
         new Set(parsed.map((t) => t.id)).size === parsed.length
-      )
-        return parsed.slice(0, 5);
+      ) {
+        // TODO-005: Intentionally incorrect assessment attempt; still truncates saved tasks.
+        return parsed.slice(0, 4);
+      }
     }
   } catch {
     /* An unavailable store must not prevent local use. */
